@@ -24,30 +24,39 @@ def load_model():
     return obesity_classifier
 
 # CSS untuk latar belakang, gaya, dan animasi
+# CSS untuk latar belakang, gaya, dan animasi
 def load_css():
     st.markdown(
         """
         <style>
         .stApp {
-            background-image: url("https://img.freepik.com/free-photo/sports-equipment-paper-background_23-2147735014.jpg?t=st=1717252039~exp=1717255639~hmac=6b96f57808c2272930c2e905900460b14a29814ad13b6ed845971813480cd69d&w=1380");
+            background-image: url("https://r4.wallpaperflare.com/wallpaper/707/220/899/gradient-blue-pink-abstract-art-wallpaper-a33b436d2de9cbc5dfa6225748ab3818.jpg");
             background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             transition: background 0.5s ease;
+            color: #ffffff; /* Warna putih */
         }
         .title-box {
             text-align: center;
             margin-top: 2rem;
+            animation: fadeInDown 1s ease;
         }
         .title-box h1 {
             font-size: 3rem;
-            color: #fff;
+            color: #ffffff; /* Warna putih */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Efek bayangan */
+            margin: 0;
         }
         .info-box {
             text-align: center;
             margin-top: 2rem;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff; /* Warna putih */
+            background: rgba(0, 0, 0, 0.7); /* Warna hitam transparan */
             padding: 1rem;
             border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
+            animation: fadeInUp 1s ease;
         }
         .center-buttons {
             display: flex;
@@ -59,39 +68,51 @@ def load_css():
             font-weight: bold;
             font-size: 1.1rem;
             padding: 0.5rem 1rem;
-            background-color: #007bff;
+            background-color: #ff69b4; /* Warna pink */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin: 0 0.5rem;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Efek transisi */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
         }
         .center-buttons button:hover {
-            background-color: #0056b3;
+            background-color: #ff1493; /* Warna pink lebih gelap */
+            transform: scale(1.05); /* Efek perbesaran */
+        }
+        .center-buttons button:active {
+            transform: scale(0.95); /* Efek pengecilan saat diklik */
         }
         .extra-box {
             text-align: center;
             margin-top: 1rem;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff; /* Warna putih */
+            background: rgba(0, 0, 0, 0.7); /* Warna hitam transparan */
             padding: 1rem;
             border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
+            animation: fadeIn 1.5s ease;
         }
         .top-menu {
             display: flex;
             justify-content: flex-end;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.7); /* Warna hitam transparan */
             padding: 0.5rem 1rem;
             position: sticky;
             top: 0;
             z-index: 1000;
+            animation: slideDown 0.5s ease;
         }
         .top-menu a {
             color: #fff;
             margin: 0 1rem;
             text-decoration: none;
             font-weight: bold;
+            transition: color 0.3s ease; /* Efek transisi */
+        }
+        .top-menu a:hover {
+            color: #ff69b4; /* Warna pink */
         }
         .button-container {
             display: flex;
@@ -102,18 +123,42 @@ def load_css():
             margin: 0 0.5rem;
         }
         .article-container {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(50, 50, 50, 0.9);
             border-radius: 10px;
             padding: 10px;
             margin-top: 10px;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
+            animation: fadeIn 1.5s ease;
         }
         .article-container img {
             border-radius: 10px;
+            transition: transform 0.3s ease; /* Efek transisi */
+        }
+        .article-container img:hover {
+            transform: scale(1.05); /* Efek perbesaran */
+        }
+        /* Animasi */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         </style>
         """, unsafe_allow_html=True
     )
+
 
 # Fungsi Validasi
 def check_uppercase(password):
@@ -262,6 +307,7 @@ def main_page():
     if st.button("Logout"):
         st.session_state['logged_in'] = False
         st.experimental_rerun()
+        
 
 # Halaman artikel
 def articles_page():
@@ -271,37 +317,44 @@ def articles_page():
 
 # Halaman Video Workout
 def video_page():
-# Pilihan video workout
-    st.header("Workout Videos")
+    st.title("Workout Videos")
+    
+    # Filter berdasarkan kategori BMI
+    bmi_category = st.selectbox("Select BMI Category", ["All", "Insufficient Weight", "Normal Weight", "Overweight Level 1", "Overweight Level 2", "Obesity Level 1", "Obesity Level 2", "Obesity Level 3"])
+
+    # Data video workout contoh
     videos = [
-        {
-            "title": "Full Body Workout",
-            "url": "https://www.youtube.com/watch?v=UBMk30rjy0o"
-        },
-        {
-            "title": "Yoga for Beginners",
-            "url": "https://www.youtube.com/watch?v=v7AYKMP6rOE"
-        },
-        {
-            "title": "HIIT Cardio",
-            "url": "https://www.youtube.com/watch?v=ml6cT4AZdqI"
-        },
-        {
-            "title": "Strength Training",
-            "url": "https://www.youtube.com/watch?v=pD3UGQwsha4"
-        }
+        {"title": "Workout for Insufficient Weight", "category": "Insufficient Weight", "url": "https://www.youtube.com/watch?v=GR5A8RHxRAw"},
+        {"title": "Workout for Normal Weight", "category": "Normal Weight", "url": "https://www.youtube.com/watch?v=FeR-4_Opt-g"},
+        {"title": "Workout for Overweight Level 1", "category": "Overweight Level 1", "url": "https://www.youtube.com/watch?v=7KSNmziMqog"},
+        {"title": "Workout for Overweight Level 2", "category": "Overweight Level 2", "url": "https://www.youtube.com/watch?v=UheajlsZ72E"},
+        {"title": "Workout for Obesity Level 1", "category": "Obesity Level 1", "url": "https://www.youtube.com/watch?v=-hSma-BRzoo"},
+        {"title": "Workout for Obesity Level 2", "category": "Obesity Level 2", "url": "https://www.youtube.com/watch?v=Xzg9SONKMD4"},
+        {"title": "Workout for Obesity Level 3", "category": "Obesity Level 3", "url": "https://www.youtube.com/watch?v=Eq4qBpBa07I"},
     ]
 
-    selected_video = st.radio(
-        "Choose a workout video:",
-        [video["title"] for video in videos]
-    )
+    # Filter video berdasarkan kategori BMI yang dipilih
+    filtered_videos = videos if bmi_category == "All" else [video for video in videos if video["category"] == bmi_category]
 
-    video_url = next(video["url"] for video in videos if video["title"] == selected_video)
-    st.video(video_url)
+    for video in filtered_videos:
+        st.write(f"**{video['title']}**")
+        st.video(video["url"])
 
+    # Keterangan jenis rekomendasi video workout
+    recommendations = {
+        "Insufficient Weight": "Workouts for building muscle mass and gaining weight.",
+        "Normal Weight": "Balanced workouts for maintaining healthy weight and overall fitness.",
+        "Overweight Level 1": "Moderate intensity workouts for weight loss and fitness.",
+        "Overweight Level 2": "High intensity workouts for significant weight loss and improved health.",
+        "Obesity Level 1": "Workouts focused on high calorie burn and strength training.",
+        "Obesity Level 2": "Workouts designed for substantial weight loss and cardiovascular health.",
+        "Obesity Level 3": "Low impact, high intensity workouts tailored for significant weight loss and health improvement."
+    }
 
-    st.write("Halaman ini memberikan pilihan video workout untuk membantu Anda dalam menjaga kebugaran.")
+    st.write("### Workout Recommendations")
+    st.write(recommendations.get(bmi_category, "Select a BMI category to see recommendations."))
+ 
+
 # Halaman klasifikasi obesitas
 def obesity_classification_page():
     st.title("Check Your Condition")
@@ -420,6 +473,22 @@ def obesity_classification_page():
                 st.write(f"Rekomendasi workout: {workout}")
                 st.write(f"Rekomendasi kalori harian: {calories}")
                 st.write(f"Rekomendasi jenis makanan: {food}")
+                # Video recommendations
+                videos = [
+                    {"title": "Workout for Insufficient Weight", "category": "Insufficient Weight", "url": "https://www.youtube.com/watch?v=GR5A8RHxRAw"},
+                    {"title": "Workout for Normal Weight", "category": "Normal Weight", "url": "https://www.youtube.com/watch?v=FeR-4_Opt-g"},
+                    {"title": "Workout for Overweight Level 1", "category": "Overweight Level 1", "url": "https://www.youtube.com/watch?v=7KSNmziMqog"},
+                    {"title": "Workout for Overweight Level 2", "category": "Overweight Level 2", "url": "https://www.youtube.com/watch?v=UheajlsZ72E"},
+                    {"title": "Workout for Obesity Level 1", "category": "Obesity Level 1", "url": "https://www.youtube.com/watch?v=-hSma-BRzoo"},
+                    {"title": "Workout for Obesity Level 2", "category": "Obesity Level 2", "url": "https://www.youtube.com/watch?v=Xzg9SONKMD4"},
+                    {"title": "Workout for Obesity Level 3", "category": "Obesity Level 3", "url": "https://www.youtube.com/watch?v=Eq4qBpBa07I"},
+                ]
+                filtered_videos = [video for video in videos if video["category"] == health_status]
+
+                for video in filtered_videos:
+                    st.write(f"**{video['title']}**")
+                    st.video(video["url"])
+
             else:
                 st.error("Please fill in all the details")
 
@@ -501,6 +570,17 @@ def delete_article(article_id):
 def help_page():
     st.title("Help")
     st.write("This is the help page. How can we assist you?")
+    faq = {
+        "Apa itu aplikasi ini?": "Aplikasi ini adalah platform untuk ...",
+        "Bagaimana cara mendaftar?": "Untuk mendaftar, klik tombol 'Daftar' dan ...",
+        "Bagaimana cara masuk?": "Untuk masuk, klik tombol 'Masuk' dan ...",
+        "Apa yang harus dilakukan jika lupa kata sandi?": "Jika lupa kata sandi, klik 'Lupa kata sandi' di halaman masuk dan ...",
+        "Bagaimana cara menghubungi dukungan pelanggan?": "Anda bisa menghubungi dukungan pelanggan melalui ...",
+    }
+
+    for question, answer in faq.items():
+        with st.expander(question):
+            st.write(answer)
 
 # Halaman landing
 def landing_page():
@@ -519,15 +599,20 @@ def landing_page():
     if lottie_animation:
         st_lottie(lottie_animation, height=300, key="landing")
 
-    col1, col2 = st.columns([4, 2])
-    with col1:
-        if st.button("Sign Up Now"):
-            st.session_state['page'] = 'signup'
-            st.experimental_rerun()
+    # Membuat container untuk tombol-tombol
+    # Login Button
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
     with col2:
-        if st.button("Sign In"):
-            st.session_state['page'] = 'login'
-            st.experimental_rerun()
+        col2_1, col2_2 = st.columns([0.4, 0.6])
+        with col2_2:
+            if st.button("Sign Up"):
+                st.session_state['page'] = 'signup'
+                st.experimental_rerun()
+        with col3:
+            if st.button("Sign In"):
+                st.session_state['page'] = 'login'
+                st.experimental_rerun()
 
  # Menampilkan artikel dalam kolom
     display_articleslp()
@@ -542,40 +627,40 @@ def landing_page():
 def display_articleslp():
     articles = [
         {
-            "title": "Sit Down While You Eat. It Makes A Big Difference.",
-            "description": "Learn about the essential nutrients your body needs.",
-            "image_url": "https://d35oenyzp35321.cloudfront.net/MHC_Blog_Health_Benefits_of_Sitting_Down_to_Eat_38a8bf3be5.jpg",
-            "url": "https://www.maxhealthcare.in/blogs/sit-down-while-you-eat-it-makes-big-difference"
+            "title": "Pentingnya Aktif Bergerak untuk Jaga Berharganya Kesehatan Tubuh.",
+            "description": "Tahukah kamu bahwa aktif bergerak tidak hanya baik untuk kesehatan tubuh tapi juga bagi kesehatan mental serta menjaga penampilan tetap prima?.",
+            "image_url": "https://www.anlene.com/content/dam/countries/indonesia/anlene_indonesia/article/1280-08.-anlene_followup_february2021_pentingnya-aktif-bergerak-untuk-jaga-berharganya-kesehatan-tubuh-rev.jpg",
+            "url": "https://www.anlene.com/id/ms/pentingnya-aktif-bergerak.html"
         },
         {
-            "title": "Indian Diet Plan In Pregnancy",
-            "description": "Discover how staying healthy in pregnancy.",
-            "image_url": "https://d35oenyzp35321.cloudfront.net/indian_diet_plan_ae5b9f7f27.jpg",
-            "url": "https://www.maxhealthcare.in/blogs/indian-diet-plan-pregnancy"
+            "title": "8 Macam Buah yang Ampuh Turunkan Kolesterol",
+            "description": "Tubuh memproduksi kolesterol bukan tanpa alasan. Dalam proses pencernaan lemak makanan dan produksi sejumlah hormon seperti testosteron",
+            "image_url": "https://www.anlene.com/content/dam/anlene/AnleneIDnew/buah_turunkan_kolesterol.jpg",
+            "url": "https://www.anlene.com/id/ms/buah-penurun-kolesterol.html"
         },
         {
-            "title": "Understanding BMI",
-            "description": "A guide to understanding Body Mass Index and its implications.",
-            "image_url": "https://d35oenyzp35321.cloudfront.net/love_your_age_fce9d54f64.jpg",
-            "url": "https://www.maxhealthcare.in/blogs/love-your-age"
+            "title": "T4 Macam Penyakit Tulang Rapuh yang Harus Diwaspadai",
+            "description": "Ketika mendengar kata penyakit tulang rapuh, kebanyakan dari kita pasti otomatis berpikir osteoporosis. Faktanya, osteoporosis bukanlah satu-satunya",
+            "image_url": "https://www.anlene.com/content/dam/anlene/AnleneIDnew/01.%20Anlene_FollowUp_Oktober2021_4%20Macam%20Penyakit%20Tulang%20Rapuh%20yang%20Harus%20Diwaspadai%20.jpg",
+            "url": "https://www.anlene.com/id/ms/penyakit-tulang-rapuh.html"
         },
         {
-            "title": "Healthy Eating on a Budget",
-            "description": "Tips for maintaining a healthy diet without breaking the bank.",
-            "image_url": "https://via.placeholder.com/150",
-            "url": "https://example.com/article4"
+            "title": "Dukung Orang Tua Jadi Lansia Prima, Ini 7 Rekomendasi Olahraga untuk Lansia!",
+            "description": "Baik anak-anak, remaja, orang dewasa hingga orang tua, semua memiliki kebutuhan yang sama akan olahraga.",
+            "image_url": "https://www.anlene.com/content/dam/countries/indonesia/anlene_indonesia/article_2/1280-09.-anlene_followup_mei2021_dukung-orang-tua-jadi-lansia-prima,-ini-7-rekomendasi-olahraga-untuk-lansia!.jpg",
+            "url": "https://www.anlene.com/id/ms/olahraga-untuk-lansia.html"
         },
         {
-            "title": "Managing Stress",
-            "description": "Techniques to help you manage stress effectively.",
-            "image_url": "https://via.placeholder.com/150",
-            "url": "https://example.com/article5"
+            "title": "Jangan Disepelekan! Ginjal Punya Fungsi Penting untuk Tubuh",
+            "description": "Ginjal adalah organ tubuh yang terletak di bawah tulang rusuk bagian belakang, dekat bagian tengah punggung pada kedua sisi tulang belakang. ",
+            "image_url": "https://www.anlene.com/content/dam/anlene/AnleneIDnew/05.%20Anlene_FollowUp_March2022_Jangan%20Disepelekan!%20Ginjal%20Punya%20Fungsi%20Penting%20untuk%20Tubuh.jpg",
+            "url": "https://www.anlene.com/id/ms/pentingnya-ginjal-untuk-tubuh.html"
         },
         {
-            "title": "The Role of Sleep in Health",
-            "description": "Learn about the importance of sleep for your wellbeing.",
-            "image_url": "https://via.placeholder.com/150",
-            "url": "https://example.com/article6"
+            "title": "Pentingnya Aktif Bergerak untuk Jaga Berharganya Kesehatan Tubuh",
+            "description": "Tahukah kamu bahwa aktif bergerak tidak hanya baik untuk kesehatan tubuh tapi juga bagi kesehatan mental serta menjaga penampilan tetap prima? ",
+            "image_url": "https://www.anlene.com/content/dam/countries/indonesia/anlene_indonesia/article/1280-08.-anlene_followup_february2021_pentingnya-aktif-bergerak-untuk-jaga-berharganya-kesehatan-tubuh-rev.jpg",
+            "url": "https://www.anlene.com/id/ms/pentingnya-aktif-bergerak-untuk-jaga-berharganya-kesehatan-tubuh.html"
         }
     ]
 
@@ -610,7 +695,7 @@ def main():
                 options=["Home", "Articles", "Workout Video", "Check Your Condition", "Help", "Admin Page", "Logout"]
                 if st.session_state['role'] == 'admin'
                 else ["Home", "Articles", "Workout Video", "Check Your Condition", "Help", "Logout"],
-                icons=["house", "book", "calculator", "check-circle", "question-circle", "gear", "door-open"],
+                icons=["house", "book", "calculator", "check-circle", "question-circle",  "door-open"],
                 menu_icon="cast",
                 default_index=0,
             )
